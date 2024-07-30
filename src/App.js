@@ -9,7 +9,7 @@ function App() {
   const [averageDurations, setAverageDurations] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [showLanding, setShowLanding] = useState(true);
+  const [user, setUser] = useState(null);
 
   const handleDataParsed = (content, avgDurations) => {
     setIsLoading(true);
@@ -27,14 +27,14 @@ function App() {
     }
   };
 
-  const handleGetStarted = () => {
-    setShowLanding(false);
+  const handleSignIn = (user) => {
+    setUser(user);
   };
 
   return (
     <div className="App">
-      {showLanding ? (
-        <LandingPage onGetStarted={handleGetStarted} />
+      {!user ? (
+        <LandingPage onSignIn={handleSignIn} />
       ) : (
         <div className="main-content">
           <h1>Audit Log Timeline Viewer</h1>
