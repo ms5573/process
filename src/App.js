@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import FileUpload from './components/FileUpload';
 import Timeline from './components/Timeline';
+import LandingPage from './components/LandingPage';
 import './App.css';
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
   const [averageDurations, setAverageDurations] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [showLanding, setShowLanding] = useState(true);
 
   const handleDataParsed = (content, avgDurations) => {
     setIsLoading(true);
@@ -25,14 +27,25 @@ function App() {
     }
   };
 
+  const handleGetStarted = () => {
+    setShowLanding(false);
+  };
+
   return (
     <div className="App">
-      <h1>Audit Log Timeline Viewer</h1>
-      <FileUpload onDataParsed={handleDataParsed} />
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
-      {fileContent && !isLoading && (
-        <Timeline data={fileContent} averageDurations={averageDurations} />
+      {showLanding ? (
+        <LandingPage onGetStarted={handleGetStarted} />
+      ) : (
+        <div className="main-content">
+          <h1>Audit Log Timeline Viewer</h1>
+          <p>Please upload your CSV file to begin:</p>
+          <FileUpload onDataParsed={handleDataParsed} />
+          {isLoading && <p>Loading...</p>}
+          {error && <p className="error">{error}</p>}
+          {fileContent && !isLoading && (
+            <Timeline data={fileContent} averageDurations={averageDurations} />
+          )}
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,35 @@
+.landing-page {
+  background-color: #1a1a4a;
+  color: white;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 3.5rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.get-started-btn {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.get-started-btn:hover {
+  background-color: #3a80d2;
+}
