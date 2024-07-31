@@ -7,18 +7,21 @@ import './App.css';
 function App() {
   const [fileContent, setFileContent] = useState('');
   const [averageDurations, setAverageDurations] = useState('');
+  const [processVariants, setProcessVariants] = useState([]); // Add this line
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState(null);
 
-  const handleDataParsed = (content, avgDurations) => {
+  const handleDataParsed = (content, avgDurations, variants) => {
     setIsLoading(true);
     setError(null);
     try {
       console.log('Received file content length:', content.length);
       console.log('Received average durations:', avgDurations);
+      console.log('Received process variants:', variants);
       setFileContent(content);
       setAverageDurations(avgDurations);
+      setProcessVariants(JSON.parse(variants));
     } catch (err) {
       console.error('Error processing file:', err);
       setError('Error processing file. Please ensure it\'s a valid CSV.');
@@ -43,7 +46,11 @@ function App() {
           {isLoading && <p>Loading...</p>}
           {error && <p className="error">{error}</p>}
           {fileContent && !isLoading && (
-            <Timeline data={fileContent} averageDurations={averageDurations} />
+            <Timeline 
+              data={fileContent} 
+              averageDurations={averageDurations} 
+              processVariants={processVariants}
+            />
           )}
         </div>
       )}

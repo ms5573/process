@@ -26,3 +26,24 @@
   font-size: 12px;
   fill: #666;
 }
+
+.variants-table {
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.variants-table th, .variants-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.variants-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.variants-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}

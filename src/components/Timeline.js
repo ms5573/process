@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-function Timeline({ data, averageDurations }) {
+function Timeline({ data, averageDurations, processVariants }) {
+  const variantsRef = useRef();
   const svgRef = useRef();
 
   useEffect(() => {
     console.log('Timeline component received data length:', data.length);
     console.log('Timeline component received averageDurations:', averageDurations);
+    console.log('Timeline component received processVariants:', processVariants);
 
     if (data && averageDurations) {
       const parsedAvgDurations = d3.csvParse(averageDurations);
@@ -70,14 +72,44 @@ function Timeline({ data, averageDurations }) {
         .attr('transform', `translate(${width/2},${height + margin.bottom})`)
         .style('text-anchor', 'middle')
         .text('Average Duration (days)');
+
       // After creating the visualization
       console.log('Visualization created with data:', parsedAvgDurations);
     } else {
       console.log('Missing data or averageDurations');
     }
-  }, [data, averageDurations]);
 
-  return <svg ref={svgRef}></svg>;
+    // Add new code to display process variants
+    if (processVariants && processVariants.length > 0) {
+      const variantsContainer = d3.select(variantsRef.current);
+      variantsContainer.selectAll("*").remove();
+
+      const table = variantsContainer.append("table")
+        .attr("class", "variants-table");
+
+      const header = table.append("thead").append("tr");
+      header.append("th").text("Process Variant");
+      header.append("th").text("Case Count");
+
+      const rows = table.append("tbody")
+        .selectAll("tr")
+        .data(processVariants)
+        .enter()
+        .append("tr");
+
+      rows.append("td")
+        .text(d => d.variant);
+      rows.append("td")
+        .text(d => d.count);
+    }
+  }, [data, averageDurations, processVariants]);
+
+  return (
+    <div>
+      <div ref={variantsRef}></div>
+      <svg ref={svgRef}></svg>
+    </div>
+  );
 }
 
 export default Timeline;

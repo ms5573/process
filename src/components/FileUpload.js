@@ -2,6 +2,31 @@ import React from 'react';
 import Papa from 'papaparse';
 
 function FileUpload({ onDataParsed }) {
+  function getProcessVariants(parsedData) {
+    const variantMap = new Map();
+    
+    parsedData.forEach(row => {
+      const userId = row.user_id;
+      const eventType = row.event_type;
+      
+      if (!variantMap.has(userId)) {
+        variantMap.set(userId, []);
+      }
+      variantMap.get(userId).push(eventType);
+    });
+    
+    const variantFrequency = new Map();
+    for (const sequence of variantMap.values()) {
+      const variant = sequence.join('-->');
+      variantFrequency.set(variant, (variantFrequency.get(variant) || 0) + 1);
+    }
+    
+    return Array.from(variantFrequency.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 10)
+      .map(([variant, count]) => ({ variant, count }));
+  }
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -44,12 +69,17 @@ function FileUpload({ onDataParsed }) {
 
           console.log('Average Durations:', averageDurations);
 
+          // Calculate process variants
+          const processVariants = getProcessVariants(parsedData);
+          console.log('Top 10 Process Variants:', processVariants);
+
           // Convert parsed data and average durations back to CSV strings
           const csvString = Papa.unparse(dataWithDurations);
           const avgDurationsCSV = Papa.unparse(averageDurations);
           console.log('CSV string length:', csvString.length);
           console.log('Average durations CSV:', avgDurationsCSV);
-          onDataParsed(csvString, avgDurationsCSV);
+
+          onDataParsed(csvString, avgDurationsCSV, JSON.stringify(processVariants));
         },
         header: false,
         error: (error) => {
